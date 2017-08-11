@@ -14,10 +14,7 @@ public class PlayerSpell extends GameObject {
 
     public PlayerSpell() {
         super();
-
-        this.renderer = new ImageRenderer(SpriteUtils.loadImage(
-                "assets/images/player-spells/a/0.png"
-        ));
+        this.renderer = new ImageRenderer(SpriteUtils.loadImage("assets/images/player-spells/a/0.png"));
     }
 
     public void run() {

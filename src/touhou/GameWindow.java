@@ -3,6 +3,7 @@ package touhou;
 import bases.GameObject;
 import tklibs.SpriteUtils;
 import bases.Constraints;
+import touhou.BackGrounds.BackGround;
 import touhou.enemies.EnemySpawner;
 import touhou.inputs.InputManager;
 import touhou.players.Player;
@@ -29,19 +30,26 @@ public class GameWindow extends Frame {
     private BufferedImage backbufferImage;
     private Graphics2D backbufferGraphics;
 
-    private BufferedImage background;
-
     Player player = new Player();
+
+    BackGround backGround = new BackGround();
+
     EnemySpawner enemySpawner = new EnemySpawner(); // TODO: Viec cua lop: sua thanh game object
 
     InputManager inputManager = new InputManager();
 
     public GameWindow() {
         pack();
-        background = SpriteUtils.loadImage("assets/images/background/0.png");
+        addBackGround();
         addPlayer();
         setupGameLoop();
         setupWindow();
+    }
+
+    private void addBackGround() {
+        backGround.getPosition().set(384/2, 0);
+
+        GameObject.add(backGround);
     }
 
     private void addPlayer() {
@@ -59,7 +67,7 @@ public class GameWindow extends Frame {
     private void setupWindow() {
         this.setSize(1024, 768);
 
-        this.setTitle("Touhou - Remade by QHuyDTVT");
+        this.setTitle("Touhou - Remade by TuanRab");
         this.setVisible(true);
 
         this.backbufferImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -114,7 +122,6 @@ public class GameWindow extends Frame {
     public void update(Graphics g) {
         backbufferGraphics.setColor(Color.black);
         backbufferGraphics.fillRect(0, 0, 1024, 768);
-        backbufferGraphics.drawImage(background, 0, 0, null);
 
         GameObject.renderAll(backbufferGraphics);
 
