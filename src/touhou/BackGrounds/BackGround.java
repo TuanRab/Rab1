@@ -12,7 +12,7 @@ public class BackGround extends GameObject {
     }
 
     public void run(){
-        super.run();
+        //super.run();
         position.addUp(0, 1);
     }
 }

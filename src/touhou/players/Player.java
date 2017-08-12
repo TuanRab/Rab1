@@ -1,6 +1,7 @@
 package touhou.players;
 
 import bases.GameObject;
+import bases.Vector2D;
 import tklibs.SpriteUtils;
 import bases.Constraints;
 import bases.FrameCounter;
@@ -32,8 +33,8 @@ public class Player extends GameObject {
         this.constraints = contraints;
     }
 
-    public void run() {
-        super.run();
+    public void run(Vector2D parentPosition) {
+        super.run(parentPosition);
 
         if (inputManager.upPressed)
             position.addUp(0, -SPEED);

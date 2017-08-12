@@ -2,6 +2,8 @@ package touhou.enemies;
 
 import bases.FrameCounter;
 import bases.GameObject;
+import bases.physics.BoxCollider;
+import bases.physics.PhysicsBody;
 import tklibs.SpriteUtils;
 import bases.Vector2D;
 import bases.renderers.ImageRenderer;
@@ -11,21 +13,24 @@ import java.awt.*;
 /**
  * Created by huynq on 8/9/17.
  */
-public class Enemy extends GameObject {
+public class Enemy extends GameObject implements PhysicsBody {
     private static final float SPEED = 3;
     private FrameCounter coolDownBullet;
     private boolean bulletLock;
+    private BoxCollider boxCollider;
 
     public Enemy() {
         super();
         this.bulletLock = false;
+        boxCollider = new BoxCollider(20, 20);
+        this.children.add(boxCollider);
         renderer = new ImageRenderer(SpriteUtils.loadImage("assets/images/enemies/level0/blue/0.png"));
         this.coolDownBullet = new FrameCounter(40);
     }
 
     // Controller
-    public void run() {
-        super.run();
+    public void run(Vector2D parentPosition) {
+        super.run(parentPosition);
         fly();
         shoot();
     }
@@ -54,5 +59,11 @@ public class Enemy extends GameObject {
 
     private void fly() {
         position.addUp(0, SPEED);
+        //System.out.println(boxCollider);
+    }
+
+    @Override
+    public BoxCollider getBoxCollider() {
+        return this.boxCollider;
     }
 }
