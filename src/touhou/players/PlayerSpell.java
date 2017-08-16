@@ -22,6 +22,7 @@ public class PlayerSpell extends GameObject implements PhysicsBody {
         boxCollider = new BoxCollider(20, 20);    // todo
         this.children.add(boxCollider);                        // todo
         this.renderer = new ImageRenderer(SpriteUtils.loadImage("assets/images/player-spells/a/0.png"));
+        //this.renderer = new ImageRenderer(SpriteUtils.loadImage("assets/images/player-spells/a/1.png"));
     }
 
     public void run(Vector2D parentPosition) {
@@ -32,7 +33,7 @@ public class PlayerSpell extends GameObject implements PhysicsBody {
 
     private void hitEnemy() {
         Enemy enemy = Physics.colliderWithEnemy(this.boxCollider);
-        if(enemy!= null){
+        if(enemy!= null ){
             enemy.setActive(false);
             this.isActive = false;
         }

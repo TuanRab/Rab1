@@ -4,9 +4,11 @@ import bases.GameObject;
 import tklibs.SpriteUtils;
 import bases.Constraints;
 import touhou.BackGrounds.BackGround;
+import touhou.Items.ItemSpawner;
 import touhou.enemies.EnemySpawner;
 import touhou.inputs.InputManager;
 import touhou.players.Player;
+import touhou.players.PlayerSpawner;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -35,6 +37,10 @@ public class GameWindow extends Frame {
     BackGround backGround = new BackGround();
 
     EnemySpawner enemySpawner = new EnemySpawner(); // TODO: Viec cua lop: sua thanh game object
+
+    PlayerSpawner playerSpawner = new PlayerSpawner();
+
+    ItemSpawner itemSpawner = new ItemSpawner();
 
     InputManager inputManager = new InputManager();
 
@@ -116,6 +122,8 @@ public class GameWindow extends Frame {
     private void run() {
         GameObject.runAll();
         enemySpawner.spawn();
+        itemSpawner.spawn();
+        //playerSpawner.spawn();
     }
 
     @Override
