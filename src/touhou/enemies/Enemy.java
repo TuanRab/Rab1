@@ -6,6 +6,7 @@ import bases.GameObject;
 import bases.physics.BoxCollider;
 import bases.physics.Physics;
 import bases.physics.PhysicsBody;
+import bases.renderers.Animation;
 import tklibs.SpriteUtils;
 import bases.Vector2D;
 import bases.renderers.ImageRenderer;
@@ -13,6 +14,8 @@ import touhou.inputs.InputManager;
 import touhou.players.Player;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -23,16 +26,23 @@ public class Enemy extends GameObject implements PhysicsBody {
     private FrameCounter coolDownBullet;
     private boolean bulletLock;
     private BoxCollider boxCollider;
-//    private InputManager inputManager;
-//    private int random;
     private Constraints constraints;
 
     public Enemy() {
         super();
+
+        ArrayList<BufferedImage> images = new ArrayList<>();
+
         this.bulletLock = false;
         boxCollider = new BoxCollider(20, 20);
         this.children.add(boxCollider);
-        renderer = new ImageRenderer(SpriteUtils.loadImage("assets/images/enemies/level0/blue/0.png"));
+
+        renderer = new Animation(
+                SpriteUtils.loadImage("assets/images/enemies/level0/blue/0.png"),
+                SpriteUtils.loadImage("assets/images/enemies/level0/blue/1.png"),
+                SpriteUtils.loadImage("assets/images/enemies/level0/blue/2.png"),
+                SpriteUtils.loadImage("assets/images/enemies/level0/blue/3.png"));
+
         this.coolDownBullet = new FrameCounter(70);
     }
 

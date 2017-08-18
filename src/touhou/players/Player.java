@@ -5,12 +5,16 @@ import bases.Vector2D;
 import bases.physics.BoxCollider;
 import bases.physics.Physics;
 import bases.physics.PhysicsBody;
+import bases.pools.GameObjectPool;
+import bases.renderers.Animation;
 import tklibs.SpriteUtils;
 import bases.Constraints;
 import bases.FrameCounter;
 import bases.renderers.ImageRenderer;
 import touhou.Items.Item;
 import touhou.inputs.InputManager;
+import touhou.players.spheres.PlayerSphere;
+import touhou.players.spheres.SphereBullet;
 
 import java.util.Vector;
 
@@ -34,8 +38,26 @@ public class Player extends GameObject implements PhysicsBody {
         this.children.add(boxCollider);
         //this.heartPlayer = 15;
         this.spellLock = false;
-        this.renderer = new ImageRenderer(SpriteUtils.loadImage("assets/images/players/straight/0.png"));
+        this.renderer = new Animation(
+                SpriteUtils.loadImage("assets/images/players/straight/0.png"),
+                SpriteUtils.loadImage("assets/images/players/straight/2.png"),
+                SpriteUtils.loadImage("assets/images/players/straight/4.png"),
+                SpriteUtils.loadImage("assets/images/players/straight/6.png")
+        );
         this.coolDownCounter = new FrameCounter(3);
+        addSphere();
+    }
+
+    private void addSphere() {
+        PlayerSphere leftSphere = new PlayerSphere();
+        leftSphere.getPosition().set(-20,0);
+
+        PlayerSphere rightSphere = new PlayerSphere();
+        rightSphere.getPosition().set(20,0);
+        rightSphere.setReverse(true);
+
+        this.children.add(leftSphere);
+        this.children.add(rightSphere);
     }
 
     public void setContraints(Constraints contraints) {
@@ -45,38 +67,62 @@ public class Player extends GameObject implements PhysicsBody {
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
 
-        if (inputManager.upPressed)
+        if (inputManager.upPressed) {
             position.addUp(0, -SPEED);
-        if (inputManager.downPressed)
+            this.renderer = new Animation(
+                    SpriteUtils.loadImage("assets/images/players/straight/0.png"),
+                    SpriteUtils.loadImage("assets/images/players/straight/1.png"),
+                    SpriteUtils.loadImage("assets/images/players/straight/3.png"),
+                    SpriteUtils.loadImage("assets/images/players/straight/5.png"),
+                    SpriteUtils.loadImage("assets/images/players/straight/6.png")
+            );
+        }
+        if (inputManager.downPressed) {
             position.addUp(0, SPEED);
-        if (inputManager.leftPressed)
+            this.renderer = new Animation(
+                    SpriteUtils.loadImage("assets/images/players/straight/0.png"),
+                    SpriteUtils.loadImage("assets/images/players/straight/2.png"),
+                    SpriteUtils.loadImage("assets/images/players/straight/4.png"),
+                    SpriteUtils.loadImage("assets/images/players/straight/6.png")
+            );
+        }
+        if (inputManager.leftPressed) {
             position.addUp(-SPEED, 0);
-        if (inputManager.rightPressed)
+            this.renderer = new Animation(
+                    SpriteUtils.loadImage("assets/images/players/left/0.png"),
+                    SpriteUtils.loadImage("assets/images/players/left/1.png"),
+                    SpriteUtils.loadImage("assets/images/players/left/3.png"),
+                    SpriteUtils.loadImage("assets/images/players/left/5.png")
+            );
+        }
+        if (inputManager.rightPressed) {
             position.addUp(SPEED, 0);
+            this.renderer = new Animation(
+                    SpriteUtils.loadImage("assets/images/players/right/0.png"),
+                    SpriteUtils.loadImage("assets/images/players/right/1.png"),
+                    SpriteUtils.loadImage("assets/images/players/right/3.png"),
+                    SpriteUtils.loadImage("assets/images/players/right/5.png")
+                    );
+        }
 
         if (constraints != null) {
             constraints.make(position);
         }
 
         castSpell1();
-        //castSpell2();
-//        EatItem();
-    }
-
-    private void EatItem() {
-        Item item = Physics.colliderWithItem(boxCollider);
-        if(item != null){
-            item.setActive(false);
-            this.isActive = true;
-        }
 
     }
-
+    
     private void castSpell1() {
         if (inputManager.xPressed && !spellLock) {
-            PlayerSpell newSpell1 = new PlayerSpell();
+            PlayerSpell newSpell1 = GameObjectPool.recycle(PlayerSpell.class);
             newSpell1.getPosition().set(this.position.add(0, -30));
-            GameObject.add(newSpell1);
+
+            SphereBullet leftSphere = GameObjectPool.recycle(SphereBullet.class);
+            leftSphere.getPosition().set(this.position.add(-20, 0));
+
+            SphereBullet rightSphere = GameObjectPool.recycle(SphereBullet.class);
+            rightSphere.getPosition().set(this.position.add(20, 0));
 
             spellLock = true;
             coolDownCounter.reset();

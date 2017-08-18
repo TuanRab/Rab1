@@ -22,17 +22,25 @@ public class PlayerSpell extends GameObject implements PhysicsBody {
         boxCollider = new BoxCollider(20, 20);    // todo
         this.children.add(boxCollider);                        // todo
         this.renderer = new ImageRenderer(SpriteUtils.loadImage("assets/images/player-spells/a/0.png"));
-        //this.renderer = new ImageRenderer(SpriteUtils.loadImage("assets/images/player-spells/a/1.png"));
     }
 
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
         position.addUp(0, -10);
         hitEnemy();
+        deactiveIfNeeded();
+
+    }
+
+    private void deactiveIfNeeded() {
+        if(this.screenPosition.y < 0) {
+            this.isActive = false;
+        }
     }
 
     private void hitEnemy() {
-        Enemy enemy = Physics.colliderWithEnemy(this.boxCollider);
+        // Todo
+        Enemy enemy = Physics.colliderWith(this.boxCollider, Enemy.class);
         if(enemy!= null ){
             enemy.setActive(false);
             this.isActive = false;

@@ -9,6 +9,7 @@ import touhou.enemies.EnemySpawner;
 import touhou.inputs.InputManager;
 import touhou.players.Player;
 import touhou.players.PlayerSpawner;
+import touhou.players.spheres.SphereSpawner;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -38,9 +39,9 @@ public class GameWindow extends Frame {
 
     EnemySpawner enemySpawner = new EnemySpawner(); // TODO: Viec cua lop: sua thanh game object
 
-    PlayerSpawner playerSpawner = new PlayerSpawner();
+    //SphereSpawner sphereSpawner = new SphereSpawner();
 
-    ItemSpawner itemSpawner = new ItemSpawner();
+    //ItemSpawner itemSpawner = new ItemSpawner();
 
     InputManager inputManager = new InputManager();
 
@@ -122,7 +123,8 @@ public class GameWindow extends Frame {
     private void run() {
         GameObject.runAll();
         enemySpawner.spawn();
-        itemSpawner.spawn();
+        //sphereSpawner.spawner();
+        //itemSpawner.spawn();
         //playerSpawner.spawn();
     }
 

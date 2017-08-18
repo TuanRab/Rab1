@@ -13,7 +13,7 @@ public class FrameCounter {
     }
 
     public boolean run() {
-        if (count >= countMax)
+        if (count > countMax)
             return true;
         count++;
         return false;
