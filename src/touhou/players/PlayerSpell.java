@@ -1,21 +1,18 @@
 package touhou.players;
 
 import bases.GameObject;
-import bases.physics.BoxCollider;
-import bases.physics.Physics;
-import bases.physics.PhysicsBody;
-import tklibs.SpriteUtils;
 import bases.Vector2D;
+import bases.physics.BoxCollider;
+import bases.physics.PhysicsBody;
 import bases.renderers.ImageRenderer;
-import touhou.enemies.Enemy;
-
-import java.awt.*;
+import tklibs.SpriteUtils;
 
 /**
  * Created by huynq on 8/2/17.
  */
 public class PlayerSpell extends GameObject implements PhysicsBody {
     private BoxCollider boxCollider;
+    private int damage = 1;
 
     public PlayerSpell() {
         super();
@@ -27,7 +24,7 @@ public class PlayerSpell extends GameObject implements PhysicsBody {
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
         position.addUp(0, -10);
-        hitEnemy();
+        //hitEnemy();
         deactiveIfNeeded();
 
     }
@@ -38,17 +35,19 @@ public class PlayerSpell extends GameObject implements PhysicsBody {
         }
     }
 
-    private void hitEnemy() {
-        // Todo
-        Enemy enemy = Physics.colliderWith(this.boxCollider, Enemy.class);
-        if(enemy!= null ){
-            enemy.setActive(false);
-            this.isActive = false;
-        }
-    }
+//    private void hitEnemy() {
+//        // Todo
+//        Enemy enemy = Physics.colliderWith(this.boxCollider, Enemy.class);
+//        if(enemy!= null ){
+//            enemy.getHit(damage);
+//            enemy.setActive(false);
+//            this.isActive = false;
+//        }
+//    }
 
     @Override
     public BoxCollider getBoxCollider() {
         return boxCollider;
     }
+
 }

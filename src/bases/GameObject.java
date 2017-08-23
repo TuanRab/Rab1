@@ -2,9 +2,8 @@ package bases;
 
 import bases.physics.Physics;
 import bases.physics.PhysicsBody;
-import bases.renderers.ImageRenderer;
+import bases.pools.GameObjectPool;
 import bases.renderers.Renderer;
-import touhou.players.PlayerSpell;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ public class GameObject {
 
     protected ArrayList<GameObject> children;
     protected boolean isActive;
+    private boolean isReviewing;
 
     private static Vector<GameObject> gameObjects = new Vector<>();
     private static Vector<GameObject> newGameObjects = new Vector<>();
@@ -60,9 +60,16 @@ public class GameObject {
 
     public static void renderAll(Graphics2D g2d) {
         for (GameObject gameObject : gameObjects) {
-            if(gameObject.isActive)
+            if(gameObject.isActive && !gameObject.isReviewing)
                 gameObject.render(g2d);
         }
+    }
+
+    public static void clearAll(){
+        gameObjects.clear();
+        newGameObjects.clear();
+        Physics.clearAll();
+        GameObjectPool.clearAll();
     }
 
     public static void add(GameObject gameObject) {
@@ -78,6 +85,7 @@ public class GameObject {
 
     public void run(Vector2D parentPosition) {
         screenPosition = parentPosition.add(position);
+        isReviewing = false;
         for (GameObject child : children){
             if(child.isActive)
                 child.run(screenPosition);
@@ -99,6 +107,10 @@ public class GameObject {
         return position;
     }
 
+    public Vector2D getScreenPosition() {
+        return screenPosition;
+    }
+
     public void setPosition(Vector2D position) {
         if (position != null)
             this.position = position;
@@ -111,5 +123,11 @@ public class GameObject {
     public void setRenderer(Renderer renderer) {
         if (renderer != null)
             this.renderer = renderer;
+    }
+
+    public  void reset(){
+        this.isActive = true;
+        this.isReviewing = true;
+
     }
 }

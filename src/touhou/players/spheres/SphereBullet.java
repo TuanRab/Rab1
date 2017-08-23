@@ -15,7 +15,7 @@ public class SphereBullet extends GameObject implements PhysicsBody {
         super();
         boxCollider = new BoxCollider(20,20);
         this.children.add(boxCollider);
-        animation = new Animation(7, false,
+        animation = new Animation(7, false,false,
                 SpriteUtils.loadImage("assets/images/sphere-bullets/0.png"),
                 SpriteUtils.loadImage("assets/images/sphere-bullets/1.png"),
                 SpriteUtils.loadImage("assets/images/sphere-bullets/2.png"),
@@ -26,7 +26,16 @@ public class SphereBullet extends GameObject implements PhysicsBody {
     public void run(Vector2D parentPosition){
         super.run(parentPosition);
         position.addUp(0, -10);
+        //hitEnemy();
     }
+
+//    private void hitEnemy() {
+//        Enemy enemy = Physics.colliderWith(this.boxCollider, Enemy.class);
+//        if(enemy!= null ){
+//            enemy.setActive(false);
+//            this.isActive = false;
+//        }
+//    }
 
     @Override
     public BoxCollider getBoxCollider() {

@@ -21,10 +21,10 @@ public class PlayerSphere extends  GameObject{
         super();
         this.animation = new Animation(
                 7,
-                false,
-                SpriteUtils.loadImage("assets/images/sphere/0.png"),
-                SpriteUtils.loadImage("assets/images/sphere/1.png"),
-                SpriteUtils.loadImage("assets/images/sphere/2.png"),
+                false, false,
+//                SpriteUtils.loadImage("assets/images/sphere/0.png"),
+//                SpriteUtils.loadImage("assets/images/sphere/1.png"),
+//                SpriteUtils.loadImage("assets/images/sphere/2.png"),
                 SpriteUtils.loadImage("assets/images/sphere/3.png"));
         this.renderer = animation;
         this.spherelock = false;

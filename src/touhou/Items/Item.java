@@ -6,6 +6,7 @@ import bases.Vector2D;
 import bases.physics.BoxCollider;
 import bases.physics.Physics;
 import bases.physics.PhysicsBody;
+import bases.renderers.Animation;
 import bases.renderers.ImageRenderer;
 import tklibs.SpriteUtils;
 import touhou.players.Player;
@@ -21,7 +22,7 @@ public class Item extends GameObject implements PhysicsBody{
         super();
         boxCollider = new BoxCollider(20, 20);
         this.children.add(boxCollider);
-        this.renderer = new ImageRenderer(SpriteUtils.loadImage("assets/images/items/power-up-blue.png"));
+        this.renderer = new Animation(SpriteUtils.loadImage("assets/images/items/power-up-blue.png"));
     }
 
     public void  run(Vector2D parentPosition){

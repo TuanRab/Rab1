@@ -1,27 +1,19 @@
 package touhou.players;
 
+import bases.Constraints;
+import bases.FrameCounter;
 import bases.GameObject;
 import bases.Vector2D;
 import bases.physics.BoxCollider;
-import bases.physics.Physics;
-import bases.physics.PhysicsBody;
 import bases.pools.GameObjectPool;
-import bases.renderers.Animation;
-import tklibs.SpriteUtils;
-import bases.Constraints;
-import bases.FrameCounter;
-import bases.renderers.ImageRenderer;
-import touhou.Items.Item;
 import touhou.inputs.InputManager;
 import touhou.players.spheres.PlayerSphere;
 import touhou.players.spheres.SphereBullet;
 
-import java.util.Vector;
-
 /**
  * Created by huynq on 8/2/17.
  */
-public class Player extends GameObject implements PhysicsBody {
+public class Player extends GameObject {
     private static final int SPEED = 5;
 
     private InputManager inputManager;
@@ -30,30 +22,30 @@ public class Player extends GameObject implements PhysicsBody {
     private FrameCounter coolDownCounter;
     private boolean spellLock;
     private BoxCollider boxCollider;
-    //public static final int heartPlayer = 15;
+
+    private Vector2D velocity;
+    private  PlayerAnimator animator;
 
     public Player() {
         super();
         boxCollider = new BoxCollider(5, 5);
         this.children.add(boxCollider);
-        //this.heartPlayer = 15;
         this.spellLock = false;
-        this.renderer = new Animation(
-                SpriteUtils.loadImage("assets/images/players/straight/0.png"),
-                SpriteUtils.loadImage("assets/images/players/straight/2.png"),
-                SpriteUtils.loadImage("assets/images/players/straight/4.png"),
-                SpriteUtils.loadImage("assets/images/players/straight/6.png")
-        );
+
+        this.animator = new PlayerAnimator();
+        this.renderer = animator;
+
         this.coolDownCounter = new FrameCounter(3);
+        this.velocity = new Vector2D();
         addSphere();
     }
 
     private void addSphere() {
         PlayerSphere leftSphere = new PlayerSphere();
-        leftSphere.getPosition().set(-20,0);
+        leftSphere.getPosition().set(-25,0);
 
         PlayerSphere rightSphere = new PlayerSphere();
-        rightSphere.getPosition().set(20,0);
+        rightSphere.getPosition().set(25,0);
         rightSphere.setReverse(true);
 
         this.children.add(leftSphere);
@@ -67,62 +59,52 @@ public class Player extends GameObject implements PhysicsBody {
     public void run(Vector2D parentPosition) {
         super.run(parentPosition);
 
+        velocity.set(0, 0);
+
         if (inputManager.upPressed) {
-            position.addUp(0, -SPEED);
-            this.renderer = new Animation(
-                    SpriteUtils.loadImage("assets/images/players/straight/0.png"),
-                    SpriteUtils.loadImage("assets/images/players/straight/1.png"),
-                    SpriteUtils.loadImage("assets/images/players/straight/3.png"),
-                    SpriteUtils.loadImage("assets/images/players/straight/5.png"),
-                    SpriteUtils.loadImage("assets/images/players/straight/6.png")
-            );
+            velocity.y -= SPEED;
+
         }
         if (inputManager.downPressed) {
-            position.addUp(0, SPEED);
-            this.renderer = new Animation(
-                    SpriteUtils.loadImage("assets/images/players/straight/0.png"),
-                    SpriteUtils.loadImage("assets/images/players/straight/2.png"),
-                    SpriteUtils.loadImage("assets/images/players/straight/4.png"),
-                    SpriteUtils.loadImage("assets/images/players/straight/6.png")
-            );
+            velocity.y += SPEED;
+
         }
         if (inputManager.leftPressed) {
-            position.addUp(-SPEED, 0);
-            this.renderer = new Animation(
-                    SpriteUtils.loadImage("assets/images/players/left/0.png"),
-                    SpriteUtils.loadImage("assets/images/players/left/1.png"),
-                    SpriteUtils.loadImage("assets/images/players/left/3.png"),
-                    SpriteUtils.loadImage("assets/images/players/left/5.png")
-            );
+            velocity.x -= SPEED;
         }
         if (inputManager.rightPressed) {
-            position.addUp(SPEED, 0);
-            this.renderer = new Animation(
-                    SpriteUtils.loadImage("assets/images/players/right/0.png"),
-                    SpriteUtils.loadImage("assets/images/players/right/1.png"),
-                    SpriteUtils.loadImage("assets/images/players/right/3.png"),
-                    SpriteUtils.loadImage("assets/images/players/right/5.png")
-                    );
+            velocity.x += SPEED;
+
         }
 
         if (constraints != null) {
             constraints.make(position);
         }
 
-        castSpell1();
+        position.addUp(velocity);
+        animator.update(this);
+
+        castSpell();
 
     }
-    
-    private void castSpell1() {
+
+    public Vector2D getVelocity() {
+        return velocity;
+    }
+
+    private void castSpell() {
         if (inputManager.xPressed && !spellLock) {
             PlayerSpell newSpell1 = GameObjectPool.recycle(PlayerSpell.class);
-            newSpell1.getPosition().set(this.position.add(0, -30));
+            newSpell1.getPosition().set(this.position.add(-10, -20));
+
+            PlayerSpell newSpell2 = GameObjectPool.recycle(PlayerSpell.class);
+            newSpell2.getPosition().set(this.position.add(10,-20));
 
             SphereBullet leftSphere = GameObjectPool.recycle(SphereBullet.class);
-            leftSphere.getPosition().set(this.position.add(-20, 0));
+            leftSphere.getPosition().set(this.position.add(-25, 0));
 
             SphereBullet rightSphere = GameObjectPool.recycle(SphereBullet.class);
-            rightSphere.getPosition().set(this.position.add(20, 0));
+            rightSphere.getPosition().set(this.position.add(25, 0));
 
             spellLock = true;
             coolDownCounter.reset();
@@ -144,9 +126,8 @@ public class Player extends GameObject implements PhysicsBody {
     public void setInputManager(InputManager inputManager) {
         this.inputManager = inputManager;
     }
-
-    @Override
-    public BoxCollider getBoxCollider() {
-        return boxCollider;
-    }
+//    @Override
+//    public BoxCollider getBoxCollider() {
+//        return boxCollider;
+//    }
 }
